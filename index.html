@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المواد الدراسية</title>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4881989333327610"
+     crossorigin="anonymous"></script>
+     
+
+     <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PLC6MB45');</script>
+<!-- End Google Tag Manager -->
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Firebase -->
+    <script type="module">
+        // استيراد الدوال اللازمة من SDKs التي تحتاجها
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // TODO: استبدل هذا بكائن تهيئة Firebase الخاص بتطبيق الويب الخاص بك
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // ربط الدوال بالـ window لجعلها متاحة في HTML
+        window.loginUser = () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // تم تسجيل الدخول
+                    const user = userCredential.user;
+                    console.log('Logged in:', user);
+                    closeModal('loginModal');
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        };
+        
+        window.registerUser = () => {
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            createUserWithEmailAndPassword(auth, email, password)
+              .then((userCredential) => {
+                // تم التسجيل
+                const user = userCredential.user;
+                console.log('Registered:', user);
+                closeModal('registerModal');
+                // يمكنك إظهار رسالة ترحيب أو تحديث واجهة المستخدم
+              })
+              .catch((error) => {
+                alert(error.message);
+              });
+        };
+
+        window.signInWithGoogle = () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    console.log('Google sign-in successful:', result.user);
+                    closeModal('loginModal');
+                    closeModal('registerModal');
+                }).catch((error) => {
+                    alert(error.message);
+                });
+        };
+
+        // مراقبة حالة المصادقة
+        onAuthStateChanged(auth, (user) => {
+            const loginButton = document.getElementById('loginButton');
+            const logoutButton = document.getElementById('logoutButton');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (user) {
+                // المستخدم قام بتسجيل الدخول
+                loginButton.classList.add('hidden');
+                logoutButton.classList.remove('hidden');
+                welcomeMessage.textContent = `مرحباً، ${user.email.split('@')[0]}`;
+                welcomeMessage.classList.remove('hidden');
+            } else {
+                // المستخدم قام بتسجيل الخروج
+                loginButton.classList.remove('hidden');
+                logoutButton.classList.add('hidden');
+                welcomeMessage.classList.add('hidden');
+            }
+        });
+        
+        window.logoutUser = () => {
+            signOut(auth).then(() => {
+                console.log('User signed out');
+            }).catch((error) => {
+                alert(error.message);
+            });
+        }
+
+    </script>
+    <style>
+        /* Custom Font */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+        :root {
+            --bg-primary: #1a202c;
+            --text-primary: #e2e8f0;
+            --accent-color: #38bdf8;
+            --card-bg: #2d3748;
+        }
+
+        .theme-light {
+             --bg-primary: #f1f5f9;
+            --text-primary: #1e293b;
+            --accent-color: #0ea5e9;
+            --card-bg: #ffffff;
+        }
+        
+        .theme-forest {
+            --bg-primary: #111827;
+            --text-primary: #d1d5db;
+            --accent-color: #10b981;
+            --card-bg: #1f2937;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .subject-card, .modal-content {
+            background-color: var(--card-bg);
+            transition: background-color 0.3s;
+        }
+        
+        .text-accent { color: var(--accent-color); }
+        .bg-accent { background-color: var(--accent-color); }
+        .border-accent { border-color: var(--accent-color); }
+        .hover\:bg-accent-dark:hover { background-color: #0ea5e9; }
+
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color);
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color);
+                transform: scale(1.05);
+            }
+        }
+        .footer-animate {
+            animation: pulse-glow 4s infinite ease-in-out;
+        }
+
+        .subject-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+            border: 2px solid transparent;
+        }
+        .subject-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 25px -5px rgba(from var(--accent-color) r g b / 0.2), 0 10px 10px -5px rgba(from var(--accent-color) r g b / 0.1);
+            border-color: var(--accent-color);
+        }
+
+        iframe { border: none; }
+        .modal { backdrop-filter: blur(5px); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLC6MB45"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+ 
+    <!-- حاوية المحتوى الرئيسية -->
+    <div id="mainContent" class="container mx-auto px-4 py-8 md:py-16 min-h-screen flex flex-col">
+        
+        <!-- قسم الترويسة -->
+        <header class="text-center mb-12">
+            <div class="flex justify-between items-center mb-8">
+                 <div class="relative">
+                    <button id="themeButton" onclick="toggleThemeDropdown()" class="text-2xl p-2 rounded-full hover:bg-slate-700 transition-colors">
+                        <i class="fa-solid fa-palette"></i>
+                    </button>
+                    <div id="themeDropdown" class="hidden absolute start-0 mt-2 w-40 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-20">
+                        <a href="#" onclick="changeTheme('default')" class="block px-4 py-2 text-sm hover:bg-slate-700">الافتراضي</a>
+                        <a href="#" onclick="changeTheme('light')" class="block px-4 py-2 text-sm hover:bg-slate-700">فاتح</a>
+                        <a href="#" onclick="changeTheme('forest')" class="block px-4 py-2 text-sm hover:bg-slate-700">غابة</a>
+                    </div>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-white">المواد الدراسية</h1>
+                 <div>
+                    <span id="welcomeMessage" class="hidden text-white mr-4"></span>
+                    <button id="loginButton" onclick="openModal('loginModal')" class="text-2xl p-2 rounded-full hover:bg-slate-700 transition-colors"><i class="fa-solid fa-right-to-bracket"></i></button>
+                    <button id="logoutButton" onclick="logoutUser()" class="hidden text-2xl p-2 rounded-full hover:bg-slate-700 transition-colors"><i class="fa-solid fa-right-from-bracket"></i></button>
+                 </div>
+            </div>
+            <p class="text-lg text-slate-300">اختر المادة التي ترغب في دراستها أو مراجعتها</p>
+        </header>
+
+        <!-- شبكة المواد -->
+        <main class="flex-grow">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- بطاقة المادة 1: سيبر سيكيورتي -->
+                <div class="subject-card cursor-pointer p-8 rounded-xl shadow-lg text-center" onclick="openFile('./cyber security.app/cyber security.app.html')">
+                    <div class="text-5xl text-accent mb-4"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3 class="text-2xl font-bold mb-2">سيبر سيكيورتي</h3>
+                    <p class="text-slate-400">5 محاضرات متاحة</p>
+                </div>
+                <!-- بطاقة المادة 2: إنترنت الأشياء -->
+                <div class="subject-card cursor-pointer p-8 rounded-xl shadow-lg text-center" onclick="openFile('./iot/iot.html')">
+                    <div class="text-5xl text-accent mb-4"><i class="fa-solid fa-wifi"></i></div>
+                    <h3 class="text-2xl font-bold mb-2">IoT</h3>
+                    <p class="text-slate-400">6 محاضرات متاحة</p>
+                </div>
+                <!-- بطاقة المادة 3: أوفيس -->
+                <div class="subject-card cursor-pointer p-8 rounded-xl shadow-lg text-center" onclick="openFile('./officeapp/index.html')">
+                    <div class="text-5xl text-accent mb-4"><i class="fa-solid fa-file-word"></i></div>
+                    <h3 class="text-2xl font-bold mb-2">ميكروسوفت أوفيس</h3>
+                    <p class="text-slate-400">9 محاضرات متاحة</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- قسم التذييل -->
+        <footer class="text-center mt-16 py-4">
+            <p class="text-lg text-accent footer-animate">By: abdallah mohamed ali</p>
+        </footer>
+    </div>
+
+    <!-- عارض الملفات -->
+    <div id="fileViewer" class="hidden min-h-screen w-full">
+        <div class="p-4 bg-slate-800 sticky top-0 z-10"><button onclick="closeFile()" class="bg-accent hover:bg-accent-dark text-white font-bold py-2 px-6 rounded-lg transition-colors duration-300 flex items-center gap-2"><i class="fa-solid fa-arrow-right"></i><span>الرجوع للمواد</span></button></div>
+        <iframe id="fileFrame" class="w-full h-screen" src=""></iframe>
+    </div>
+    
+    <!-- نافذة تسجيل الدخول -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 modal">
+        <div class="modal-content p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <h2 class="text-3xl font-bold text-center mb-6">تسجيل الدخول</h2>
+            <div class="space-y-4">
+                <input id="loginEmail" type="email" placeholder="البريد الإلكتروني" class="w-full p-3 bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent">
+                <input id="loginPassword" type="password" placeholder="كلمة المرور" class="w-full p-3 bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent">
+                <button onclick="loginUser()" class="w-full bg-accent hover:bg-accent-dark text-white font-bold py-3 rounded-lg transition-colors">دخول</button>
+                <button onclick="signInWithGoogle()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-google"></i>
+                    <span>الدخول باستخدام جوجل</span>
+                </button>
+            </div>
+            <p class="text-center mt-6">ليس لديك حساب؟ <a href="#" onclick="openModal('registerModal'); closeModal('loginModal')" class="text-accent hover:underline">سجل الآن</a></p>
+            <button onclick="closeModal('loginModal')" class="absolute top-4 left-4 text-2xl">&times;</button>
+        </div>
+    </div>
+    
+    <!-- نافذة التسجيل -->
+    <div id="registerModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 modal">
+        <div class="modal-content p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <h2 class="text-3xl font-bold text-center mb-6">إنشاء حساب جديد</h2>
+            <div class="space-y-4">
+                <input type="text" placeholder="الاسم" class="w-full p-3 bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent">
+                <input id="registerEmail" type="email" placeholder="البريد الإلكتروني" class="w-full p-3 bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent">
+                <input id="registerPassword" type="password" placeholder="كلمة المرور" class="w-full p-3 bg-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent">
+                <button onclick="registerUser()" class="w-full bg-accent hover:bg-accent-dark text-white font-bold py-3 rounded-lg transition-colors">تسجيل</button>
+                 <button onclick="signInWithGoogle()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-google"></i>
+                    <span>التسجيل باستخدام جوجل</span>
+                </button>
+            </div>
+             <p class="text-center mt-6">لديك حساب بالفعل؟ <a href="#" onclick="openModal('loginModal'); closeModal('registerModal')" class="text-accent hover:underline">سجل الدخول</a></p>
+            <button onclick="closeModal('registerModal')" class="absolute top-4 left-4 text-2xl">&times;</button>
+        </div>
+    </div>
+
+<footer class="p-6 text-center border-t-2">
+            <p id="footer-text" class="text-lg md:text-xl font-medium">
+                <!-- Name will be inserted here by JavaScript with animation -->
+            </p>
+            <p class="disclaimer mt-2">
+                هذا الموقع هو أداة مساعدة للطلاب ولا يتبع أي جهة تعليمية بشكل رسمي.
+                <br>
+                To Communicate: 01285512241
+                <br>
+            </p>
+                <br>
+            <a href="https://novera.team/" > Idea by Novera Team </a>
+        </footer>
+
+
+    <script>
+        const mainContent = document.getElementById('mainContent');
+        const fileViewer = document.getElementById('fileViewer');
+        const fileFrame = document.getElementById('fileFrame');
+
+        function openFile(filePath) {
+            fileFrame.src = filePath;
+            mainContent.classList.add('hidden');
+            fileViewer.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function closeFile() {
+            fileViewer.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            fileFrame.src = '';
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function toggleThemeDropdown() {
+            document.getElementById('themeDropdown').classList.toggle('hidden');
+        }
+        
+        function changeTheme(theme) {
+            document.body.className = `antialiased theme-${theme}`;
+            toggleThemeDropdown(); // لإخفاء القائمة بعد الاختيار
+        }
+        
+        // إغلاق قائمة الثيمات عند الضغط في أي مكان آخر
+        window.onclick = function(event) {
+          if (!event.target.matches('#themeButton') && !event.target.closest('#themeButton')) {
+            var dropdowns = document.getElementsByClassName("absolute");
+            for (var i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (!openDropdown.classList.contains('hidden') && openDropdown.id === 'themeDropdown') {
+                openDropdown.classList.add('hidden');
+              }
+            }
+          }
+        }
+
+
+    </script>
+</body>
+</html>

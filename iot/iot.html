@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة IOT التعليمية - جامعة برج العرب التكنولوجية</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body data-theme="default">
+
+    <!-- شاشة تسجيل الدخول -->
+    <div class="login-overlay active" id="login-overlay">
+        <div class="login-box">
+            <i class="fas fa-satellite-dish login-icon"></i>
+            <h2>منصة IOT التعليمية</h2>
+            <p>الرجاء إدخال الرقم الأكاديمي للبدء</p>
+            <input type="text" id="academic-id-input" placeholder="e.g., 2420001" autocomplete="off">
+            <button id="login-btn" class="btn">تسجيل الدخول</button>
+        </div>
+    </div>
+
+    <!-- محتوى التطبيق الرئيسي -->
+    <div id="main-content" class="main-container">
+        <header>
+            <nav>
+                <div class="logo">
+                    <span id="platform-title"><i class="fas fa-network-wired"></i> منصة IOT</span>
+                    <span id="welcome-message" class="welcome-message"></span>
+                </div>
+                <div class="theme-switcher">
+                    <button id="theme-btn" aria-label="تغيير الثيم"><i class="fas fa-palette"></i></button>
+                    <div id="theme-options" class="theme-options">
+                    <div class="theme-option" data-theme="default" title="بترولي"></div>
+                    <div class="theme-option" data-theme="light" title="فاتح"></div>
+                    <div class="theme-option" data-theme="dark" title="داكن"></div>
+                    <div class="theme-option" data-theme="fire" title="ناري"></div>
+                    <div class="theme-option" data-theme="forest" title="غابة"></div>
+                    <div class="theme-option" data-theme="ocean" title="محيط"></div>
+                    <div class="theme-option" data-theme="rainbow" title="قوس قزح"></div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- الشاشة الرئيسية -->
+            <div id="home-screen" class="screen">
+                <div class="hero">
+                    <h1>مرحبًا بك في منصة إنترنت الأشياء</h1>
+                </div>
+                <div class="home-grid">
+                    <a href="#" data-target="lectures-screen" class="home-card-btn">
+                        <i class="fas fa-book-open"></i>
+                        <h3>المحاضرات</h3>
+                        <p>Lectures & Quizzes</p>
+                    </a>
+                    <a href="#" data-target="tutorials-screen" class="home-card-btn">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h3>دروس تعليمية</h3>
+                        <p>Tutorials</p>
+                    </a>
+                    <a href="#" data-target="midterm-screen" class="home-card-btn">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>مراجعة الميدتيرم</h3>
+                        <p>Midterm Revision</p>
+                    </a>
+                    <a href="#" data-target="final-exam-screen" class="home-card-btn">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>الامتحان الشامل</h3>
+                        <p>Final Exam</p>
+                    </a>
+                    <a href="#" id="home-videos-btn" class="home-card-btn">
+                    <i class="fas fa-video"></i>
+                    <h3>شروحات الفيديو</h3>
+                    <p>Video Lectures</p>
+                </a>
+                <a href="#" id="home-contact-btn" class="home-card-btn">
+                    <i class="fas fa-envelope"></i>
+                    <h3>تواصل معنا</h3>
+                    <p>Contact Us</p>
+                </a>
+                </div>
+            </div>
+
+            <!-- شاشة اختيار المحتوى (محاضرات/دروس تعليمية) -->
+            <div id="selection-screen" class="screen">
+                <button class="btn btn-secondary back-btn"><i class="fas fa-arrow-right"></i> العودة للرئيسية</button>
+                <h2 class="section-title" id="selection-title"></h2>
+                <div id="selection-grid" class="content-grid"></div>
+            </div>
+
+            <!-- شاشة الملخص -->
+            <div id="summary-screen" class="screen">
+                <button class="btn btn-secondary back-btn"><i class="fas fa-arrow-right"></i> العودة</button>
+                <div class="content-card">
+                    <h2 id="summary-title"></h2>
+                    <div class="lang-toggle">
+                        <button id="summary-lang-ar" class="active">عربي</button>
+                        <button id="summary-lang-en">English</button>
+                    </div>
+                    <div id="audio-player-container" style="display: none; margin: 1.5rem 0;">
+                         <audio id="audio-player" controls style="width: 100%;">
+                            <!-- ملاحظة: ضع مسار الملف الصوتي هنا (مثال: "audio/lecture1.mp3") -->
+                            <source id="audio-source" src="" type="audio/mpeg">
+                            متصفحك لا يدعم تشغيل الملفات الصوتية.
+                        </audio>
+                    </div>
+
+                    <div id="summary-content-ar" class="summary-content"></div>
+                    <div id="summary-content-en" class="summary-content" style="display: none; text-align: left; direction: ltr;"></div>
+                    <button id="start-quiz-btn" class="btn btn-full">🚀 ابدأ الاختبار</button>
+                </div>
+            </div>
+
+            <!-- شاشة الاختبار -->
+            <div id="quiz-screen" class="screen">
+                 <div class="content-card">
+                    <div class="quiz-header">
+                        <h2 id="quiz-title"></h2>
+                        <button class="btn btn-secondary close-quiz-btn">الخروج</button>
+                    </div>
+                    <div class="progress-bar-container"><div id="progress-bar" class="progress-bar-fill"></div></div>
+                    <p id="question-counter"></p>
+                    <p id="question-text"></p>
+                    <div id="options-container"></div>
+                    <div id="hint-container" class="hint"><p id="hint-text"></p></div>
+                    <div class="quiz-navigation">
+                        <button id="prev-btn" class="btn btn-secondary">السابق</button>
+                        <button id="next-btn" class="btn">التالي</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- شاشة النتائج -->
+            <div id="results-screen" class="screen">
+                <div class="content-card" style="text-align: center;">
+                    <h2 class="section-title">📊 النتيجة النهائية</h2>
+                    <p id="correct-answers-p"></p>
+                    <p id="wrong-answers-p"></p>
+                    <p id="success-rate-p"></p>
+                    <button id="restart-quiz-btn" class="btn">🔄 إعادة الاختبار</button>
+                    <button class="btn btn-secondary back-to-home-btn">القائمة الرئيسية</button>
+                </div>
+            </div>
+
+        </main>
+        
+        <footer>
+            <p>❤ BY: Abdallah mohamed ali</p>
+            <p class="disclaimer">هذا الموقع هو أداة مساعدة للطلاب، ولا يتبع جامعة برج العرب التكنولوجية بشكل رسمي</p>
+        </footer>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="database.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
